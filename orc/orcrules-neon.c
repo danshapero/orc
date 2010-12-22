@@ -1443,14 +1443,14 @@ ShiftInfo immshift_info[] = {
 };
 ShiftInfo regshift_info[] = {
   { 0xf3000400, "vshl.u8", FALSE, 0, 3 }, /* shlb */
-  { 0xf2000400, "vshl.s8", TRUE, 0, 3 }, /* shrsb */
-  { 0xf3000400, "vshl.u8", TRUE, 0, 3 }, /* shrub */
+  { 0xf2000400, "vshr.s8", TRUE, 0, 3 }, /* shrsb */
+  { 0xf3000400, "vshr.u8", TRUE, 0, 3 }, /* shrub */
   { 0xf3100400, "vshl.u16", FALSE, 0, 2 },
-  { 0xf2100400, "vshl.s16", TRUE, 0, 2 },
-  { 0xf3100400, "vshl.u16", TRUE, 0, 2 },
+  { 0xf2100400, "vshr.s16", TRUE, 0, 2 },
+  { 0xf3100400, "vshr.u16", TRUE, 0, 2 },
   { 0xf3200400, "vshl.u32", FALSE, 0, 1 },
-  { 0xf2200400, "vshl.s32", TRUE, 0, 1 },
-  { 0xf3200400, "vshl.u32", TRUE, 0, 1 }
+  { 0xf2200400, "vshr.s32", TRUE, 0, 1 },
+  { 0xf3200400, "vshr.u32", TRUE, 0, 1 }
 };
 
 static void
@@ -1753,6 +1753,8 @@ UNARY_NARROW(select0wb,"vmovn.i16",0xf3b20200, 3)
 BINARY(addf,"vadd.f32",0xf2000d00, 1)
 BINARY(subf,"vsub.f32",0xf2200d00, 1)
 BINARY(mulf,"vmul.f32",0xf3000d10, 1)
+//BINARY(divf,"vdiv.f32",0xee800a00, 1)
+//BINARY(sqrtf,"vsqrt.f32",0xeeb00a40, 1)
 BINARY(maxf,"vmax.f32",0xf2000f00, 1)
 BINARY(minf,"vmin.f32",0xf2200f00, 1)
 BINARY(cmpeqf,"vceq.f32",0xf2000e00, 1)
@@ -1798,6 +1800,8 @@ orc_neon_rule_ ## opcode (OrcCompiler *p, void *user, OrcInstruction *insn) \
 BINARY_VFP(addd,"vadd.f64",0xee300b00, 0)
 BINARY_VFP(subd,"vsub.f64",0xee300b40, 0)
 BINARY_VFP(muld,"vmul.f64",0xee200b00, 0)
+BINARY_VFP(divd,"vdiv.f64",0xee800a00, 0)
+BINARY_VFP(sqrtd,"vsqrt.f64",0xeeb00a40, 0)
 //BINARY_VFP(cmpeqd,"vcmpe.f64",0xee000000, 0)
 UNARY_VFP(convdf,"vcvt.f64.f32",0xee200b00, 0)
 UNARY_VFP(convfd,"vcvt.f32.f64",0xee200b00, 0)
@@ -2755,8 +2759,8 @@ orc_compiler_neon_register_rules (OrcTarget *target)
   REG(addf);
   REG(subf);
   REG(mulf);
-  //REG(divf);
-  //REG(sqrtf);
+//  REG(divf);
+//  REG(sqrtf);
   REG(maxf);
   REG(minf);
   REG(cmpeqf);
@@ -2768,6 +2772,8 @@ orc_compiler_neon_register_rules (OrcTarget *target)
   REG(addd);
   REG(subd);
   REG(muld);
+  REG(divd);
+  REG(sqrtd);
   //REG(cmpeqd);
   REG(convdf);
   REG(convfd);

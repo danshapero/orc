@@ -1,4 +1,3 @@
-
 #include "config.h"
 
 #include <stdio.h>
@@ -314,6 +313,7 @@ orc_program_compile_full (OrcProgram *program, OrcTarget *target,
   }
 
   if (_orc_compiler_flag_emulate || target == NULL) {
+    ORC_COMPILER_ERROR(compiler, "Compilation failed: no target detected");
     program->code_exec = (void *)orc_executor_emulate;
     program->orccode->exec = (void *)orc_executor_emulate;
     compiler->result = ORC_COMPILE_RESULT_UNKNOWN_COMPILE;
