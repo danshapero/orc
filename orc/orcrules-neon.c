@@ -1767,10 +1767,12 @@ UNARY(convlf,"vcvt.f32.s32",0xf3bb0600, 1)
 static void \
 orc_neon_rule_ ## opcode (OrcCompiler *p, void *user, OrcInstruction *insn) \
 { \
+  if (p->insn_shift <= vec_shift) { \
   orc_neon_emit_unary (p, insn_name, code, \
       p->vars[insn->dest_args[0]].alloc, \
       p->vars[insn->src_args[0]].alloc); \
-  if (p->insn_shift == vec_shift + 1) { \
+  } \
+  else if (p->insn_shift == vec_shift + 1) { \
     orc_neon_emit_unary (p, insn_name, code, \
         p->vars[insn->dest_args[0]].alloc + 1, \
         p->vars[insn->src_args[0]].alloc + 1); \
@@ -1783,25 +1785,29 @@ orc_neon_rule_ ## opcode (OrcCompiler *p, void *user, OrcInstruction *insn) \
 static void \
 orc_neon_rule_ ## opcode (OrcCompiler *p, void *user, OrcInstruction *insn) \
 { \
+  if (p->insn_shift <= vec_shift) { \
   orc_neon_emit_binary (p, insn_name, code, \
       p->vars[insn->dest_args[0]].alloc, \
       p->vars[insn->src_args[0]].alloc, \
       p->vars[insn->src_args[1]].alloc); \
-  if (p->insn_shift == vec_shift + 1) { \
+  } \
+  else if (p->insn_shift == vec_shift + 1) { \
     orc_neon_emit_binary (p, insn_name, code, \
         p->vars[insn->dest_args[0]].alloc+1, \
         p->vars[insn->src_args[0]].alloc+1, \
         p->vars[insn->src_args[1]].alloc+1); \
   } else { \
-    ORC_COMPILER_ERROR(p, "shift too large"); \
+    ORC_COMPILER_ERROR(p, "shift %d too large", p->insn_shift); \
   } \
 }
 
 BINARY_VFP(addd,"vadd.f64",0xee300b00, 0)
 BINARY_VFP(subd,"vsub.f64",0xee300b40, 0)
 BINARY_VFP(muld,"vmul.f64",0xee200b00, 0)
-BINARY_VFP(divd,"vdiv.f64",0xee800a00, 0)
-BINARY_VFP(sqrtd,"vsqrt.f64",0xeeb00a40, 0)
+BINARY_VFP(divf,"vdiv.f32",0xee800a00, 0)
+BINARY_VFP(divd,"vdiv.f64",0xee800b00, 0)
+BINARY_VFP(sqrtf,"vsqrt.f32",0xeeb00a40, 0)
+BINARY_VFP(sqrtd,"vsqrt.f64",0xeeb00b40, 0)
 //BINARY_VFP(cmpeqd,"vcmpe.f64",0xee000000, 0)
 UNARY_VFP(convdf,"vcvt.f64.f32",0xee200b00, 0)
 UNARY_VFP(convfd,"vcvt.f32.f64",0xee200b00, 0)
@@ -2759,8 +2765,8 @@ orc_compiler_neon_register_rules (OrcTarget *target)
   REG(addf);
   REG(subf);
   REG(mulf);
-//  REG(divf);
-//  REG(sqrtf);
+  REG(divf);
+  REG(sqrtf);
   REG(maxf);
   REG(minf);
   REG(cmpeqf);
