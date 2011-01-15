@@ -1996,6 +1996,7 @@ static void
 orc_neon_rule_accf (OrcCompiler *p, void *user, OrcInstruction *insn)
 {
   unsigned int code;
+  p->vars[insn->dest_args[0]].is_float_accum = 1;
 
   if (p->insn_shift < 1) {
     ORC_ASM_CODE(p,"  vshl.i64 %s, %s, #%d\n",
