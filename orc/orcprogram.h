@@ -225,6 +225,7 @@ struct _OrcVariable {
   int is_aligned;
   int alignment;
   int is_uncached;
+  int is_float_accum;
 
   orc_union64 value;
 
@@ -569,7 +570,7 @@ struct _OrcExecutorAlt {
   int params[ORC_VAR_T1-ORC_VAR_P1];
   int params_hi[ORC_VAR_T1-ORC_VAR_P1];
   int unused3[ORC_N_VARIABLES - ORC_VAR_T9];
-  orc_union32 accumulators[4];
+  int accumulators[4];
 };
 #define ORC_EXECUTOR_EXEC(ex) ((OrcExecutorFunc)((ex)->arrays[ORC_VAR_A1]))
 #define ORC_EXECUTOR_M(ex) ((ex)->params[ORC_VAR_A1])

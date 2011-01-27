@@ -783,6 +783,7 @@ sse_rule_accf (OrcCompiler *p, void *user, OrcInstruction *insn)
 {
   int src = p->vars[insn->src_args[0]].alloc;
   int dest = p->vars[insn->dest_args[0]].alloc;
+  p->vars[insn->dest_args[0]].is_float_accum = 1;
 
 #ifndef MMX
   if (p->loop_shift == 0) {

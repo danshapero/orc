@@ -294,7 +294,11 @@ sse_save_accumulators (OrcCompiler *compiler)
         if (compiler->vars[i].size == 2) {
           orc_sse_emit_paddw (compiler, tmp, src);
         } else {
-          orc_sse_emit_paddd (compiler, tmp, src);
+          if(compiler->vars[i].is_float_accum) {
+            orc_sse_emit_addps (compiler, tmp, src);
+          } else {
+            orc_sse_emit_paddd (compiler, tmp, src);
+          }
         }
 
 #ifndef MMX
@@ -303,7 +307,11 @@ sse_save_accumulators (OrcCompiler *compiler)
         if (compiler->vars[i].size == 2) {
           orc_sse_emit_paddw (compiler, tmp, src);
         } else {
-          orc_sse_emit_paddd (compiler, tmp, src);
+          if(compiler->vars[i].is_float_accum) {
+            orc_sse_emit_addps (compiler, tmp, src);
+          } else {
+            orc_sse_emit_paddd (compiler, tmp, src);
+          }
         }
 #endif
 
