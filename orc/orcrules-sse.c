@@ -779,6 +779,20 @@ BINARY(subq,psubq,0xfb)
 #endif
 
 static void
+sse_rule_accf (OrcCompiler *p, void *user, OrcInstruction *insn)
+{
+  int src = p->vars[insn->src_args[0]].alloc;
+  int dest = p->vars[insn->dest_args[0]].alloc;
+
+#ifndef MMX
+  if (p->loop_shift == 0) {
+    orc_sse_emit_pslldq_imm (p, 12, src);
+  }
+#endif
+  orc_sse_emit_addps (p, src, dest);
+}
+
+static void
 sse_rule_accw (OrcCompiler *p, void *user, OrcInstruction *insn)
 {
   int src = p->vars[insn->src_args[0]].alloc;
@@ -2823,6 +2837,7 @@ orc_compiler_sse_register_rules (OrcTarget *target)
   orc_rule_register (rule_set, "mulswl", sse_rule_mulswl, NULL);
   orc_rule_register (rule_set, "muluwl", sse_rule_muluwl, NULL);
 
+  orc_rule_register (rule_set, "accf", sse_rule_accf, NULL);
   orc_rule_register (rule_set, "accw", sse_rule_accw, NULL);
   orc_rule_register (rule_set, "accl", sse_rule_accl, NULL);
   orc_rule_register (rule_set, "accsadubl", sse_rule_accsadubl, NULL);

@@ -569,7 +569,7 @@ struct _OrcExecutorAlt {
   int params[ORC_VAR_T1-ORC_VAR_P1];
   int params_hi[ORC_VAR_T1-ORC_VAR_P1];
   int unused3[ORC_N_VARIABLES - ORC_VAR_T9];
-  int accumulators[4];
+  orc_union32 accumulators[4];
 };
 #define ORC_EXECUTOR_EXEC(ex) ((OrcExecutorFunc)((ex)->arrays[ORC_VAR_A1]))
 #define ORC_EXECUTOR_M(ex) ((ex)->params[ORC_VAR_A1])

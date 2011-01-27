@@ -11,6 +11,7 @@
 
 static const char *c_get_type_name (int size);
 static void c_get_name_int (char *name, OrcCompiler *p, OrcInstruction *insn, int var);
+static void c_get_name_float (char *name, OrcCompiler *p, OrcInstruction *insn, int var);
 
 void orc_c_init (void);
 
@@ -392,7 +393,7 @@ orc_compiler_c_assemble (OrcCompiler *compiler)
   if (compiler->program->is_2d) {
     ORC_ASM_CODE(compiler,"  }\n");
   }
-
+//save the accumulators if necessary
   for(i=0;i<ORC_N_COMPILER_VARIABLES;i++){
     char varname[40];
     OrcVariable *var = compiler->vars + i;
@@ -417,8 +418,14 @@ orc_compiler_c_assemble (OrcCompiler *compiler)
             ORC_ASM_CODE(compiler,"  *%s = %s;\n",
                 varnames[i], varname);
           } else if (compiler->target_flags & ORC_TARGET_C_OPCODE) {
-            ORC_ASM_CODE(compiler,"  ((orc_union32 *)ex->dest_ptrs[%d])->i += %s;\n",
-                i - ORC_VAR_A1, varname);
+            if(/*TODO: if it's a float var*/0) {
+              c_get_name_float (varname, compiler, NULL, i);
+              ORC_ASM_CODE(compiler,"  ((orc_union32 *)ex->dest_ptrs[%d])->f += %s;\n",
+                  i - ORC_VAR_A1, varname);
+            } else {
+              ORC_ASM_CODE(compiler,"  ((orc_union32 *)ex->dest_ptrs[%d])->i += %s;\n",
+                  i - ORC_VAR_A1, varname);
+            }                
           } else {
             ORC_ASM_CODE(compiler,"  ex->accumulators[%d] = %s;\n",
                 i - ORC_VAR_A1, varname);
@@ -964,6 +971,17 @@ c_rule_storeX (OrcCompiler *p, void *user, OrcInstruction *insn)
     ORC_ASM_CODE(p,"    ptr%d[i] = var%d;\n", insn->dest_args[0],
         insn->src_args[0]);
   }
+}
+
+static void
+c_rule_accf (OrcCompiler *p, void *user, OrcInstruction *insn)
+{
+  char dest[40], src1[40];
+    
+  c_get_name_float (dest, p, insn, insn->dest_args[0]);
+  c_get_name_float (src1, p, insn, insn->src_args[0]);
+    
+  ORC_ASM_CODE(p,"    %s = %s + %s;\n", dest, dest, src1);
 }
 
 static void
@@ -1542,6 +1560,7 @@ orc_c_init (void)
   orc_rule_register (rule_set, "storel", c_rule_storeX, NULL);
   orc_rule_register (rule_set, "storeq", c_rule_storeX, NULL);
 
+  orc_rule_register (rule_set, "accf", c_rule_accf, NULL);
   orc_rule_register (rule_set, "accw", c_rule_accw, NULL);
   orc_rule_register (rule_set, "accl", c_rule_accl, NULL);
   orc_rule_register (rule_set, "accsadubl", c_rule_accsadubl, NULL);

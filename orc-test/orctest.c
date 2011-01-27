@@ -539,7 +539,7 @@ orc_test_compare_output_full (OrcProgram *program, int flags)
   int have_dest ORC_GNUC_UNUSED = FALSE;
   OrcCompileResult result;
   int have_acc = FALSE;
-  int acc_exec = 0, acc_emul = 0;
+  int acc_exec=0, acc_emul=0;
   int ret = ORC_TEST_OK;
   int bad = 0;
   int misalignment;

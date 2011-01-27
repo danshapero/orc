@@ -3934,6 +3934,29 @@ emulate_mululq (OrcOpcodeExecutor *ex, int offset, int n)
 }
 
 void
+emulate_accf (OrcOpcodeExecutor *ex, int offset, int n)
+{
+  int i;
+  const orc_union32 * ORC_RESTRICT ptr4;
+  orc_union32 var12 =  { 0 };
+  orc_union32 var32;
+  
+  ptr4 = (orc_union32 *)ex->src_ptrs[0];
+  
+  
+  for (i=0; i < n; i++) {
+      /* 0: loadl */
+      var32 = ptr4[i];
+      var32.i = ORC_DENORMAL(var32.i);
+      /* 1: accf */
+      var12.f = var12.f + var32.f;
+      var12.i = ORC_DENORMAL(var12.i);
+  }
+  
+  ((orc_union32 *)ex->dest_ptrs[0])->f += var12.f;
+}
+
+void
 emulate_accw (OrcOpcodeExecutor *ex, int offset, int n)
 {
   int i;
