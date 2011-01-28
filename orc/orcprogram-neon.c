@@ -878,12 +878,21 @@ orc_neon_save_accumulators (OrcCompiler *compiler)
             break;
           case 4:
             if (compiler->loop_shift > 0) {
-              ORC_ASM_CODE(compiler,"  vpadd.u32 %s, %s, %s\n",
-                  orc_neon_reg_name (src),
-                  orc_neon_reg_name (src),
-                  orc_neon_reg_name (src));
-              code = NEON_BINARY(0xf2200b10, src, src, src);
-              orc_arm_emit (compiler, code);
+              if(var->is_float_accum) {
+                ORC_ASM_CODE(compiler,"  vpadd.f32 %s, %s, %s\n",
+                    orc_neon_reg_name (src),
+                    orc_neon_reg_name (src),
+                    orc_neon_reg_name (src));
+                code = NEON_BINARY(0xf3000d00, src, src, src);
+                orc_arm_emit (compiler, code);                  
+              } else {
+                ORC_ASM_CODE(compiler,"  vpadd.u32 %s, %s, %s\n",
+                    orc_neon_reg_name (src),
+                    orc_neon_reg_name (src),
+                    orc_neon_reg_name (src));
+                code = NEON_BINARY(0xf2200b10, src, src, src);
+                orc_arm_emit (compiler, code);
+              }
             }
 
             ORC_ASM_CODE(compiler,"  vst1.32 %s[%d], [%s]\n",

@@ -1202,6 +1202,12 @@ accl a1, t2
 absw t1, s1
 accw a1, t1
 
+.function orc_accf
+.accumulator 4 a1 float
+.source 4 s1 float
+
+accf a1, s1
+
 
 .function orc_avg2_8xn_u8
 .flags 2d

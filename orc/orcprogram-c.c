@@ -393,7 +393,7 @@ orc_compiler_c_assemble (OrcCompiler *compiler)
   if (compiler->program->is_2d) {
     ORC_ASM_CODE(compiler,"  }\n");
   }
-//save the accumulators if necessary
+
   for(i=0;i<ORC_N_COMPILER_VARIABLES;i++){
     char varname[40];
     OrcVariable *var = compiler->vars + i;
@@ -418,7 +418,7 @@ orc_compiler_c_assemble (OrcCompiler *compiler)
             ORC_ASM_CODE(compiler,"  *%s = %s;\n",
                 varnames[i], varname);
           } else if (compiler->target_flags & ORC_TARGET_C_OPCODE) {
-            if(/*TODO: if it's a float var*/0) {
+            if(var->is_float_accum) {
               c_get_name_float (varname, compiler, NULL, i);
               ORC_ASM_CODE(compiler,"  ((orc_union32 *)ex->dest_ptrs[%d])->f += %s;\n",
                   i - ORC_VAR_A1, varname);

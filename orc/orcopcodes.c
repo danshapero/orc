@@ -447,7 +447,7 @@ static OrcStaticOpcode opcodes[] = {
   { "mululq", 0, { 8 }, { 4, 4 }, emulate_mululq },
 
   /* accumulators */
-  { "accf", ORC_STATIC_OPCODE_ACCUMULATOR, { 4 }, { 4 }, emulate_accf },
+  { "accf", ORC_STATIC_OPCODE_ACCUMULATOR | ORC_STATIC_OPCODE_FLOAT, { 4 }, { 4 }, emulate_accf },
   { "accw", ORC_STATIC_OPCODE_ACCUMULATOR, { 2 }, { 2 }, emulate_accw },
   { "accl", ORC_STATIC_OPCODE_ACCUMULATOR, { 4 }, { 4 }, emulate_accl },
   { "accsadubl", ORC_STATIC_OPCODE_ACCUMULATOR, { 4 }, { 1, 1 }, emulate_accsadubl },

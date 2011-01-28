@@ -1213,6 +1213,14 @@
 <entry>+= a</entry>
 </row>
 <row>
+<entry>accf</entry>
+<entry>4</entry>
+<entry>4</entry>
+<entry></entry>
+<entry>accumulate</entry>
+<entry>+= a</entry>
+</row>
+<row>
 <entry>accsadubl</entry>
 <entry>4</entry>
 <entry>1</entry>

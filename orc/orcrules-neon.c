@@ -1993,6 +1993,32 @@ orc_neon_rule_accl (OrcCompiler *p, void *user, OrcInstruction *insn)
 }
 
 static void
+orc_neon_rule_accf (OrcCompiler *p, void *user, OrcInstruction *insn)
+{
+  unsigned int code;
+
+  if (p->insn_shift < 1) {
+    ORC_ASM_CODE(p,"  vshl.i64 %s, %s, #%d\n",
+        orc_neon_reg_name (p->tmpreg),
+        orc_neon_reg_name (p->vars[insn->src_args[0]].alloc), 32);
+    code = NEON_BINARY(0xf2a00590, p->tmpreg, 0,
+        p->vars[insn->src_args[0]].alloc);
+    code |= (32) << 16;
+    orc_arm_emit (p, code);
+    
+    orc_neon_emit_binary (p, "vadd.f32", 0xf2000d00,
+        p->vars[insn->dest_args[0]].alloc,
+        p->vars[insn->dest_args[0]].alloc,
+        p->tmpreg);
+  } else {
+    orc_neon_emit_binary (p, "vadd.f32", 0xf2000d00,
+        p->vars[insn->dest_args[0]].alloc,
+        p->vars[insn->dest_args[0]].alloc,
+        p->vars[insn->src_args[0]].alloc);
+  }
+}
+
+static void
 orc_neon_rule_select1wb (OrcCompiler *p, void *user, OrcInstruction *insn)
 {
   unsigned int code;
@@ -2838,6 +2864,7 @@ orc_compiler_neon_register_rules (OrcTarget *target)
 
   REG(accw);
   REG(accl);
+  REG(accf);
   REG(accsadubl);
   REG(swapw);
   REG(swapl);

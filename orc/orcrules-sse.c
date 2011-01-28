@@ -807,6 +807,7 @@ sse_rule_accl (OrcCompiler *p, void *user, OrcInstruction *insn)
 {
   int src = p->vars[insn->src_args[0]].alloc;
   int dest = p->vars[insn->dest_args[0]].alloc;
+  p->vars[insn->dest_args[0]].is_float_accum = 0;
 
 #ifndef MMX
   if (p->loop_shift == 0) {
@@ -824,6 +825,7 @@ sse_rule_accsadubl (OrcCompiler *p, void *user, OrcInstruction *insn)
   int dest = p->vars[insn->dest_args[0]].alloc;
   int tmp = orc_compiler_get_temp_reg (p);
   int tmp2 = orc_compiler_get_temp_reg (p);
+  p->vars[insn->dest_args[0]].is_float_accum = 0;
 
 #ifndef MMX
   if (p->loop_shift <= 2) {
